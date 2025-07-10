@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio M Herry R - Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Menggunakan font Inter untuk teks umum dan Fira Code untuk terminal */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #f4f4f5;
+            scroll-behavior: smooth;
+        }
+        .font-fira {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Efek kedip untuk kursor terminal */
+        .cursor::after {
+            content: '█';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
+        }
+
+        /* --- ANIMASI --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.7s ease-out forwards;
+        }
+        .initial-hidden {
+            opacity: 0;
+        }
+
+        /* Slider teknologi - tanpa jeda */
+        @keyframes scrollLoop {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .tech-slider .animate-scroll {
+            display: flex;
+            animation: scrollLoop 30s linear infinite;
+            white-space: nowrap;
+            gap: 1rem;
+        }
+
+        .tech-item {
+            flex-shrink: 0;
+            width: 9rem; /* sama dengan w-36 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #a1a1aa; /* text-zinc-400 */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500;    /* font-medium */
+        }
+    </style>
+
+</head>
+<body class="antialiased">
+
+    <div id="app" class="min-h-screen p-4 sm:p-6 lg:p-8 flex flex-col">
+        
+        <!-- HEADER -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="font-fira text-lg font-bold">
+                <a href="#" class="hover:text-cyan-400 transition-colors duration-300">M Herry R</a>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6 text-sm">
+                <a href="#about" onclick="scrollToSection(event, 'about')" class="hover:text-cyan-400 transition-colors duration-300">About</a>
+                <a href="#projects" onclick="scrollToSection(event, 'projects')" class="hover:text-cyan-400 transition-colors duration-300">Projects</a>
+                <a href="#contact" onclick="scrollToSection(event, 'contact')" class="hover:text-cyan-400 transition-colors duration-300">Contact</a>
+                <!-- <button id="mode-toggle-btn" onclick="toggleGuiMode()" class="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 px-4 py-2 rounded-md transition-all duration-300 hover:scale-105">
+                    Mode Terminal
+                </button> -->
+            </nav>
+            <button class="md:hidden text-2xl" onclick="alert('Menu mobile belum diimplementasikan.')">☰</button>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-grow">
+            <!-- TERMINAL VIEW (HIDDEN BY DEFAULT) -->
+            <div id="terminal-view" class="w-full max-w-4xl mx-auto bg-black/30 rounded-lg border border-zinc-800 shadow-2xl shadow-cyan-500/5 h-full flex-col hidden">
+                <div class="flex items-center p-3 bg-zinc-900/80 rounded-t-lg border-b border-zinc-800">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <p class="flex-grow text-center text-sm font-fira text-zinc-400">/home/user - zsh</p>
+                </div>
+                <div id="terminal-body" class="p-4 font-fira text-sm flex-grow overflow-y-auto">
+                    <div id="output"></div>
+                    <div class="flex items-center">
+                        <span class="text-green-400">user@portfolio:~$</span>
+                        <input type="text" id="command-input" class="bg-transparent border-none focus:ring-0 flex-grow ml-2 text-zinc-200 outline-none cursor-default" autocomplete="off">
+                        <span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GUI VIEW -->
+            <div id="gui-view" class="">
+                <!-- Section 1: Hero/About -->
+                <section id="about" class="max-w-5xl mx-auto mb-24 text-center initial-hidden">
+                    <h1 class="text-4xl md:text-6xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">Software Developer & Tech Enthusiast</h1>
+                    
+                    <!-- SLIDER GAMBAR -->
+                    <div id="image-slider" class="w-full mx-auto mt-8 relative rounded-lg overflow-hidden border border-zinc-800 shadow-lg shadow-cyan-900/10">
+                        <div id="slider-container" class="flex transition-transform duration-500 ease-in-out">
+                            <!-- Slide 1 -->
+                            <div class="w-full flex-shrink-0">
+                                <img src="assets/img/1.png" alt="Banner Portofolio" class="w-full h-auto object-cover aspect-[16/6] grayscale">
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="w-full flex-shrink-0">
+                                <img src="assets/img/2.png" alt="Banner 2" class="w-full h-auto object-cover aspect-[16/6] grayscale">
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="w-full flex-shrink-0">
+                                <img src="assets/img/3.png" alt="Banner 3" class="w-full h-auto object-cover aspect-[16/6] grayscale">
+                            </div>
+                        </div>
+
+                        <!-- Tombol Navigasi -->
+                        <button id="prev-btn" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+                        <button id="next-btn" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                    </div>
+
+                    <!-- SLIDER TEKNOLOGI BARU -->
+                    <div class="w-full tech-slider mt-12 overflow-hidden relative"
+                        style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+                        <div class="animate-scroll whitespace-nowrap flex gap-4">
+                            <!-- Daftar teknologi (asli) -->
+                            <div class="tech-item">HTML</div>
+                            <div class="tech-item">JavaScript</div>
+                            <div class="tech-item">Python</div>
+                            <div class="tech-item">PHP</div>
+                            <div class="tech-item">Laravel</div>
+                            <div class="tech-item">Java</div>
+                            <div class="tech-item">CSS</div>
+                            <div class="tech-item">SQL</div>
+                            <div class="tech-item">Git</div>
+                            <!-- Duplikasi agar loop tidak putus -->
+                            <div class="tech-item">HTML</div>
+                            <div class="tech-item">JavaScript</div>
+                            <div class="tech-item">Python</div>
+                            <div class="tech-item">PHP</div>
+                            <div class="tech-item">Laravel</div>
+                            <div class="tech-item">Java</div>
+                            <div class="tech-item">CSS</div>
+                            <div class="tech-item">SQL</div>
+                            <div class="tech-item">Git</div>
+                        </div>
+                    </div>
+
+
+                    <p class="text-zinc-400 max-w-2xl mx-auto my-12">
+                        Hello! I'm Muhammad Herry Ridwansyah, a software developer who enjoys building simple, functional, and easy-to-use applications. I focus on web and mobile development and am always interested in learning new things in the world of technology.
+                    </p>
+                    <a href="#contact" onclick="scrollToSection(event, 'contact')" class="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 hover:scale-105 inline-block">Contact Me</a>
+                </section>
+
+                <!-- Section 2: Projects -->
+                <section id="projects" class="max-w-6xl mx-auto mb-24 initial-hidden">
+                    <h2 class="text-3xl font-bold text-center mb-2"><span class="text-cyan-400 font-fira text-2xl"></span> Featured Projects</h2>
+                    <p class="text-zinc-400 text-center mb-12">These are some of my projects proud to show</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Project Card 1 -->
+                        <div class="bg-zinc-900/50 border border-zinc-800 rounded-lg p-6 transition-all duration-300 ease-in-out group hover:border-cyan-500/50 hover:-translate-y-2">
+                            <img src="assets/img/galaxy.png" alt="Gambar Proyek A" class="rounded-md mb-4 aspect-video object-cover">
+                            <h3 class="text-xl font-bold mb-2">Galaxy ERP</h3>
+                            <p class="text-zinc-400 text-sm mb-4">Galaxy ERP makes it easy for users to access real-time data according to their needs. This system is well-managed and integrated with every department, including Warehouse, Purchasing, Production, Marketing, and Accounting.
+
+Galaxy ERP is a complex system that simplifies existing business processes, suitable for both small and large companies.</p>
+                            <div class="flex flex-wrap gap-2 text-xs mb-4">
+                                <span class="bg-red-500/10 text-red-400 px-2 py-1 rounded">Laravel</span>
+                                <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded">SQL Server</span>
+                            </div>
+                            <div>
+                                <a href="#" class="text-cyan-400 hover:underline mr-4">Live Demo</a>
+                                <a href="#" class="text-cyan-400 hover:underline">GitHub</a>
+                            </div>
+                        </div>
+                        <!-- Project Card 2 -->
+                        <div class="bg-zinc-900/50 border border-zinc-800 rounded-lg p-6 transition-all duration-300 ease-in-out group hover:border-cyan-500/50 hover:-translate-y-2">
+                            <img src="assets/img/pijak.png" alt="Gambar Proyek B" class="rounded-md mb-4 aspect-video object-cover">
+                            <h3 class="text-xl font-bold mb-2">Pintar Pajak</h3>
+                            <p class="text-zinc-400 text-sm mb-4">A simulation or learning website for students at Universitas Negeri Malang to understand the flow and business processes in taxation, consisting of several modules such as Transactions, Sales, Purchases, Payments, Reporting, Personal Tax Returns, Fiscal Balance Sheets, and Profit and Loss, in collaboration with CV. Fajar Berlian.</p>
+                            <div class="flex flex-wrap gap-2 text-xs mb-4">
+                                <span class="bg-red-500/10 text-red-400 px-2 py-1 rounded">Laravel</span>
+                                <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded">SQL Server</span>
+                                <span class="bg-purple-500/10 text-purple-400 px-2 py-1 rounded">JQuery</span>
+                            </div>
+                            <div>
+                                <a href="#" class="text-cyan-400 hover:underline mr-4">Dokumentasi</a>
+                                <a href="#" class="text-cyan-400 hover:underline">GitHub</a>
+                            </div>
+                        </div>
+                        <!-- Project Card 3 -->
+                        <div class="bg-zinc-900/50 border border-zinc-800 rounded-lg p-6 transition-all duration-300 ease-in-out group hover:border-cyan-500/50 hover:-translate-y-2">
+                            <img src="assets/img/nexzo.png" alt="Gambar Proyek C" class="rounded-md mb-4 aspect-video object-cover">
+                            <h3 class="text-xl font-bold mb-2">Nexzo-App</h3>
+                            <p class="text-zinc-400 text-sm mb-4">Visualisasi data interaktif menggunakan D3.js untuk memantau metrik bisnis penting.</p>
+                            <div class="flex flex-wrap gap-2 text-xs mb-4">
+                               <span class="bg-red-500/10 text-red-400 px-2 py-1 rounded">Laravel</span>
+                                <span class="bg-blue-500/10 text-blue-400 px-2 py-1 rounded">SQL Server</span>
+                                <span class="bg-purple-500/10 text-purple-400 px-2 py-1 rounded">JQuery</span>
+                                <span class="bg-purple-500/10 text-white-400 px-2 py-1 rounded">JavaScript</span>
+                            </div>
+                            <div>
+                                <a href="#" class="text-cyan-400 hover:underline mr-4">Live Demo</a>
+                                <a href="#" class="text-cyan-400 hover:underline">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Contact -->
+                <section id="contact" class="max-w-2xl mx-auto text-center initial-hidden">
+                    <h2 class="text-3xl font-bold text-center mb-2"><span class="text-cyan-400 font-fira text-2xl"></span>Contact Me</h2>
+                    <p class="text-zinc-400 text-center mb-8">Have an interesting idea or just want to say hello? I'd love to hear from you!</p>
+                    <a href="mailto:emailanda@example.com" class="font-fira text-lg text-cyan-400 bg-zinc-800/50 py-4 px-6 rounded-lg inline-block hover:bg-zinc-800 transition-colors duration-300">
+                        muhammadherry111@gmail.com
+                    </a>
+                    <div class="flex justify-center space-x-6 mt-8">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-transform hover:scale-110 duration-300">GitHub</a>
+                        <a href="https://www.linkedin.com/in/muhammad-herry-ridwansyah-439a17183/" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-transform hover:scale-110 duration-300">LinkedIn</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-transform hover:scale-110 duration-300">Twitter</a>
+                    </div>
+
+                </section>
+            </div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="text-center mt-16 text-zinc-500 text-sm font-fira">
+            <p>Designed & Built by M Herry R</p>
+            <p>Powered by Coffee and VS Code</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- Elements ---
+        const terminalView = document.getElementById('terminal-view');
+        const guiView = document.getElementById('gui-view');
+        const commandInput = document.getElementById('command-input');
+        const outputDiv = document.getElementById('output');
+        const terminalBody = document.getElementById('terminal-body');
+        const modeToggleButton = document.getElementById('mode-toggle-btn');
+
+        let isGuiMode = true; // Mulai dengan mode GUI
+        
+        // --- Data & Content ---
+        const commands = {
+            'help': `Perintah yang tersedia:
+<span class="text-cyan-400">help</span>      - Menampilkan daftar perintah ini.
+<span class="text-cyan-400">whoami</span>    - Menampilkan informasi tentang saya.
+<span class="text-cyan-400">projects</span>  - Menampilkan daftar proyek unggulan.
+<span class="text-cyan-400">contact</span>   - Menampilkan informasi kontak.
+<span class="text-cyan-400">gui</span>       - Beralih ke mode antarmuka visual.
+<span class="text-cyan-400">clear</span>     - Membersihkan layar terminal.`,
+            'whoami': `Nama: [Nama Lengkap Anda]
+Profesi: Full-Stack Developer
+Lokasi: [Kota Anda], Indonesia
+Filosofi: "Membangun perangkat lunak yang tidak hanya fungsional, tetapi juga elegan dan mudah digunakan."`,
+            'projects': `Berikut adalah beberapa proyek saya:
+1. <span class="text-yellow-400">Sistem Manajemen Inventaris</span> - Aplikasi web untuk melacak stok barang. [React, Node.js]
+2. <span class="text-yellow-400">API Layanan Cuaca</span> - REST API cepat dengan caching. [Python, Redis, Docker]
+3. <span class="text-yellow-400">Dashboard Analitik</span> - Visualisasi data interaktif. [D3.js, Next.js]
+Ketik '<span class="text-cyan-400">gui</span>' untuk melihat detail dan demo langsung.`,
+            'contact': `Anda bisa menghubungi saya melalui:
+Email    : <a href="mailto:emailanda@example.com" class="text-cyan-400 underline">emailanda@example.com</a>
+LinkedIn : <a href="#" target="_blank" class="text-cyan-400 underline">linkedin.com/in/username</a>
+GitHub   : <a href="#" target="_blank" class="text-cyan-400 underline">github.com/username</a>`,
+            'gui': 'Anda sudah berada di mode GUI.',
+            'clear': '',
+            'sudo': 'Hey, hati-hati dengan perintah itu!',
+            'ls': 'Direktori ini berisi: about.txt, projects.txt, contact.txt',
+        };
+
+        // --- Functions ---
+        function printOutput(htmlContent) {
+            const newOutput = document.createElement('div');
+            newOutput.innerHTML = htmlContent.replace(/\n/g, '<br>');
+            outputDiv.appendChild(newOutput);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+        
+        function executeCommand(command) {
+            printOutput(`<span class="text-green-400">user@portfolio:~$</span> ${command}`);
+            
+            const cmd = command.toLowerCase().trim();
+            const output = commands[cmd];
+
+            if (cmd === 'clear') {
+                outputDiv.innerHTML = '';
+            } else if (cmd === 'gui') {
+                 printOutput(output);
+            } else if (output) {
+                printOutput(output);
+            } else {
+                printOutput(`Perintah tidak ditemukan: ${command}. Ketik 'help' untuk bantuan.`);
+            }
+            
+            commandInput.value = '';
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        function animateGuiSections() {
+            const sections = guiView.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.classList.add('initial-hidden');
+                setTimeout(() => {
+                    section.classList.remove('initial-hidden');
+                    section.classList.add('animate-fade-in-up');
+                }, index * 200);
+            });
+        }
+
+        function toggleGuiMode() {
+            isGuiMode = !isGuiMode;
+            if (isGuiMode) {
+                terminalView.classList.add('hidden');
+                guiView.classList.remove('hidden');
+                modeToggleButton.textContent = 'Mode Terminal';
+                animateGuiSections();
+            } else {
+                terminalView.classList.remove('hidden');
+                guiView.classList.add('hidden');
+                modeToggleButton.textContent = 'Mode GUI';
+                commandInput.focus();
+            }
+        }
+        
+        function scrollToSection(event, sectionId) {
+            event.preventDefault();
+            if (!isGuiMode) {
+                toggleGuiMode();
+            }
+            setTimeout(() => {
+                 document.getElementById(sectionId).scrollIntoView();
+            }, 100);
+        }
+
+        // --- Event Listeners ---
+        commandInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                executeCommand(commandInput.value);
+            }
+        });
+
+        terminalBody.addEventListener('click', () => {
+            commandInput.focus();
+        });
+
+        // --- Initial Load & Slider Logic ---
+        window.onload = () => {
+            // Langsung aktifkan mode GUI dan animasinya
+            animateGuiSections();
+
+            // Image Slider Logic
+            const sliderContainer = document.getElementById('slider-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slides = sliderContainer.children;
+            const totalSlides = slides.length;
+            let currentIndex = 0;
+
+            function updateSliderPosition() {
+                sliderContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateSliderPosition();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateSliderPosition();
+            });
+            
+            // Auto-slide
+            setInterval(() => {
+                nextBtn.click();
+            }, 5000); // Ganti gambar setiap 5 detik
+        };
+    </script>
+</body>
+</html>
+
