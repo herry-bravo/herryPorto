@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio M Herry R - Developer</title>
+    <title>M Herry R Portfolio - Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,8 +71,26 @@
                     <button onclick="switchLanguage('en')" id="btn-en" class="px-2 rounded text-xs transition-colors duration-200">EN</button>
                 </div>
             </nav>
-            <button class="md:hidden text-2xl" onclick="alert('Menu mobile belum diimplementasikan.')">☰</button>
+            <!-- Tombol Menu Mobile -->
+            <button class="md:hidden text-2xl" onclick="toggleMobileMenu()">☰</button>
         </header>
+        
+        <!-- Menu Mobile (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50">
+            <div class="flex justify-end p-6">
+                <button onclick="toggleMobileMenu()" class="text-4xl text-zinc-400 hover:text-white transition-colors">&times;</button>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full -mt-20">
+                <a href="#about" onclick="handleMobileLinkClick(event, 'about')" class="text-2xl py-4 hover:text-cyan-400 transition-colors" data-translate="nav_about">About</a>
+                <a href="#projects" onclick="handleMobileLinkClick(event, 'projects')" class="text-2xl py-4 hover:text-cyan-400 transition-colors" data-translate="nav_projects">Projects</a>
+                <a href="#contact" onclick="handleMobileLinkClick(event, 'contact')" class="text-2xl py-4 hover:text-cyan-400 transition-colors" data-translate="nav_contact">Contact</a>
+                <div class="flex items-center gap-2 bg-zinc-800 px-2 py-1 rounded-md mt-8">
+                    <button onclick="switchLanguage('id')" id="btn-id-mobile" class="px-3 py-1 rounded text-sm transition-colors duration-200">ID</button>
+                    <button onclick="switchLanguage('en')" id="btn-en-mobile" class="px-3 py-1 rounded text-sm transition-colors duration-200">EN</button>
+                </div>
+            </div>
+        </div>
+
 
         <main class="flex-grow">
             <div id="gui-view">
@@ -235,10 +253,11 @@
             }
         };
 
+        // --- ELEMENTS ---
+        const mobileMenu = document.getElementById('mobile-menu');
+
         // --- LANGUAGE SWITCHING LOGIC ---
-        let currentLang = 'id';
-        const btnId = document.getElementById('btn-id');
-        const btnEn = document.getElementById('btn-en');
+        let currentLang = 'en'; // Default language set to English
         
         function switchLanguage(lang) {
             if (!translations[lang]) return;
@@ -254,16 +273,34 @@
 
             document.title = translations[currentLang]['doc_title'];
             
+            const desktopBtnId = document.getElementById('btn-id');
+            const desktopBtnEn = document.getElementById('btn-en');
+            const mobileBtnId = document.getElementById('btn-id-mobile');
+            const mobileBtnEn = document.getElementById('btn-en-mobile');
+
             if (lang === 'id') {
-                btnId.classList.add('bg-cyan-500', 'text-white');
-                btnEn.classList.remove('bg-cyan-500', 'text-white');
+                desktopBtnId.classList.add('bg-cyan-500', 'text-white');
+                desktopBtnEn.classList.remove('bg-cyan-500', 'text-white');
+                mobileBtnId.classList.add('bg-cyan-500', 'text-white');
+                mobileBtnEn.classList.remove('bg-cyan-500', 'text-white');
             } else {
-                btnEn.classList.add('bg-cyan-500', 'text-white');
-                btnId.classList.remove('bg-cyan-500', 'text-white');
+                desktopBtnEn.classList.add('bg-cyan-500', 'text-white');
+                desktopBtnId.classList.remove('bg-cyan-500', 'text-white');
+                mobileBtnEn.classList.add('bg-cyan-500', 'text-white');
+                mobileBtnId.classList.remove('bg-cyan-500', 'text-white');
             }
         }
         
         // --- Functions ---
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        function handleMobileLinkClick(event, sectionId) {
+            toggleMobileMenu();
+            scrollToSection(event, sectionId);
+        }
+
         function animateGuiSections() {
             const sections = document.querySelectorAll('section');
             sections.forEach((section, index) => {
@@ -284,7 +321,7 @@
         window.onload = () => {
             animateGuiSections();
             
-            const savedLang = localStorage.getItem('portfolio_lang') || 'id';
+            const savedLang = localStorage.getItem('portfolio_lang') || 'en'; // Default to English
             switchLanguage(savedLang);
 
             const sliderContainer = document.getElementById('slider-container');
